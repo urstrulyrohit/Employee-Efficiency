@@ -1,0 +1,49 @@
+<div class="ui-g" style="place-content: center;margin-top: 178px;">
+  <p-card [style]="{height: '310px',width: '650px',padding:'10px'}">
+  <div class="ui-g-12">
+    <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
+      <h3 class="first">Select Project</h3>
+      <p-dropdown [options]="projects" [(ngModel)]="selectedProjects1" (onChange)="callme()" filter="true">
+        <ng-template let-item pTemplate="selectedItem">
+            <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span>
+        </ng-template>
+        <ng-template let-car pTemplate="item">
+            <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                <div style="font-size:14px;margin-top:4px;overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;">{{car.label}}</div>
+            </div>
+        </ng-template>
+      </p-dropdown>
+      <p>Selected Employees: {{ selectedProjects1 }}</p>
+    </div>
+
+    <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
+      <h3 class="first">Select Employees</h3>
+      <p-multiSelect
+        [options]="employees"
+        defaultLabel="Select Employee"
+        [(ngModel)]="selectedEmployees1"
+        [panelStyle]="{ minWidth: '30em' }"
+        [style]="{width: '192px'}"
+        (onChange)="callme()"
+      ></p-multiSelect>
+      <p>Selected Employees: {{ selectedEmployees1 }}</p>
+    </div>
+  </div>
+  <div class="ui-g-12">
+    <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
+      <h3>Start Date</h3>
+      <p-calendar [(ngModel)]="startDate1" [showIcon]="true" (ngModelChange)="callme()"></p-calendar>
+    </div>
+    <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
+      <h3>End Date</h3>
+      <p-calendar [(ngModel)]="endDate1" [showIcon]="true" (ngModelChange)="callme()"></p-calendar>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-sm-12 ui-lg-12 ui-md-12" style="text-align-last: center;">
+    <p-button icon="pi pi-check" iconPos="right" label="Export Excel"></p-button>
+  </div>
+</p-card>
+</div>
+
