@@ -3,6 +3,8 @@ import { SelectItem } from 'primeng/api/selectitem';
 import {MultiSelectModule} from 'primeng/multiselect';
 import { FsService } from './shared/fs.service';
 import * as moment from 'moment';
+import { stringify } from 'querystring';
+
 
 @Component({
   selector: 'app-root',
@@ -29,8 +31,7 @@ import * as moment from 'moment';
 `]
 })
 export class AppComponent implements OnInit {
-  constructor(private fsService: FsService)
-  {
+  constructor(private fsService: FsService) {
     // this.employees = this.ProjEmpMap;
   //   this.projects = [
   //     {label: 'PRO 1', value: 'PRO 1'},
@@ -42,66 +43,83 @@ export class AppComponent implements OnInit {
   // ];
   }
   title = 'finTimesheet';
-
-  projects: SelectItem[] =[];
+  projects: SelectItem[] = [];
   employees: SelectItem[];
   endDate1: any;
   startDate1: any;
+  disabledvalue=true;
   selectedProjects1: string;
   selectedEmployees1: string[] = [];
-   projArry =[];
+   projArry = [];
+   timeMap ;
    ProjEmpMap = [];
+   employeeSelected;
+   Effcny;
+   eData = []; // cstores employee name and corresponding efficiency !
   ngOnInit() {
     this.fsService.getInformation().subscribe(data => {
-      console.log(data);
-      this.getEffcncy(this.flateDAta(data));
+      // console.log(data);
+      this.timeMap = this.flateDAta(data) ;
     });
+
+
   }
-  getEffcncy(timeMap) {
+  getEffcncy(strDate, endDAte, proj, emp) {
     let totalExpectedHrs = 0;
     let totalAcctualHrs = 0;
 
-    let  dayFilter = true;
-    let startDate = moment('10/02/2020', 'DD/MM/YYYY'); // start Date
-    let endDate = moment('16/02/2020', 'DD/MM/YYYY'); // end Date
+    const  dayFilter = true;
+    const startDate = moment(strDate, 'DD/MM/YYYY'); // start Date
+    const endDate = moment(endDAte, 'DD/MM/YYYY'); // end Date
+
 
     // Projct in array and emp name in Array
 
-    timeMap['Judo Bank']['Himanshu Rajpurohit'].forEach(day => {
+    this.timeMap[proj][emp].forEach(day => {
+      this.employeeSelected=emp;
       if (!dayFilter) {
         totalExpectedHrs += day.expectedHrs;
         totalAcctualHrs += day.actualHrs;
+        // console.log('in day filter');
       } else {
-        let curr = moment(new Date(day.date));
+        const curr = moment(new Date(day.date));
         if (curr >= startDate && curr <= endDate) {
           totalExpectedHrs += day.expectedHrs;
           totalAcctualHrs += day.actualHrs;
+          // console.log('else in day filter');
         }
       }
     });
 
-    const Effcny = (totalAcctualHrs / totalExpectedHrs) * 100;
-    console.log(Effcny);
+    this.Effcny = (totalAcctualHrs / totalExpectedHrs) * 100;
+    console.log(emp, this.Effcny, totalAcctualHrs, totalExpectedHrs);
+    this.eData.push({
+      empName: emp,
+      efficiency:this.Effcny
+    });
+    console.log(this.eData);
   }
 
   flateDAta(timeDB) {
 
-    let timeMap = {};
-    let templateData = {};
+    const timeMap = {};
+    let templateData: any = {};
     this.projArry = [];
     this.ProjEmpMap = [];
-    // console.log(timeDB)
-    timeDB.forEach(week => {
+    console.log(timeDB); //add check value here
+    this.disabledvalue = false;
+    timeDB.forEach((week: any) => {
       templateData = {};
-      templateData['employeeName'] = week.employeeName;
-      templateData['projectName'] = week.projectName;
+      templateData.employeeName = week.employeeName;
+      templateData.projectName = week.projectName;
 
-      if( this.projArry.indexOf(week.projectName) < 0) {
+      if ( this.projArry.indexOf(week.projectName) < 0) { //(week.projectName) < 0
         this.projArry.push(
         week.projectName
             // value: week.projectName
         );
       }
+      // console.log(this.ProjEmpMap)
       // this.projects = this.projArry;
       if (this.ProjEmpMap.hasOwnProperty(week.projectName) && this.ProjEmpMap[week.projectName].indexOf(week.employeeName) < 0) {
         this.ProjEmpMap[week.projectName].push(week.employeeName);
@@ -112,12 +130,12 @@ export class AppComponent implements OnInit {
 
 
       week.weekData.forEach(day => {
-        templateData['expectedHrs'] =
+        templateData.expectedHrs =
           moment(new Date(day.date)).isoWeekday() > 5
             ? 0
             : +(+week.expectedHrs / 5);
-        templateData['actualHrs'] = day.hours;
-        templateData['date'] = day.date;
+        templateData.actualHrs = day.hours;
+        templateData.date = day.date;
 
         if (timeMap[week.projectName]) {
           timeMap[week.projectName][week.employeeName]
@@ -137,43 +155,67 @@ export class AppComponent implements OnInit {
     });
     // console.log(this.projArry);
 
-    console.log(this.ProjEmpMap);
-    console.log(this.ProjEmpMap['Judo Bank']);
+    // console.log(this.ProjEmpMap);
+    // console.log(this.ProjEmpMap['Judo Bank']);
 
     // this.projects = this.projArry;
-    this.projects = []
+    this.projects = [];
     this.projArry.forEach(element => {
       this.projects.push({
         label: element,
         value: element
-      })
+      });
     });
+
     // console.log('sudjfgsdhjsh')
     return timeMap;
   }
- callme()
- {
-  for(let key in (this.ProjEmpMap)){
-    if(key === this.selectedProjects1){
+ callme() {
+
+  for (const key in (this.ProjEmpMap)) {
+    if (key === this.selectedProjects1) {
       this.employees = this.ProjEmpMap[key];
     // console.log(this.employees)
-    this.employees=[];
+      this.employees = [];
       this.ProjEmpMap[key].forEach(element => {
         this.employees.push({
           label: element,
           value: element
-        })
+        });
       });
       console.log(this.ProjEmpMap[key]);
       console.log(this.employees);
     }
   }
-  this.ProjEmpMap
-   console.log(this.selectedProjects1);
-   console.log(this.selectedEmployees1);
-   console.log(this.startDate1);
-   console.log(this.endDate1);
 
+  this.ProjEmpMap;
+
+  // console.log(this.startDate1);
+  // console.log(this.endDate1);
+
+  console.log(this.selectedProjects1);
+}
+
+ callme2(){
+   console.log(this.selectedEmployees1);
  }
 
+ callme3(){
+  console.log(this.startDate1);
+ }
+
+ callme4() {
+ console.log(this.endDate1);
+ // tslint:disable-next-line: whitespace
+ // tslint:disable-next-line: prefer-for-of
+
+}
+finalcall(){
+
+ for(let i=0; i<this.selectedEmployees1.length; i++) {
+
+  this.getEffcncy(this.startDate1,this.endDate1,this.selectedProjects1,this.selectedEmployees1[i]);
+
+  }
+}
 }

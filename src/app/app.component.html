@@ -1,6 +1,9 @@
-<div class="ui-g" style="place-content: center;margin-top: 178px;">
-  <p-card [style]="{height: '310px',width: '650px',padding:'10px'}">
-  <div class="ui-g-12">
+<div class="ui-g" style="place-content: center;margin-top: 170px;">
+<p-progressSpinner [style]="{width: '150px', height: '150px'}" *ngIf="this.disabledvalue" ></p-progressSpinner>
+</div>
+<div class="ui-g" style="place-content: center;margin-top: -2px;" *ngIf="!this.disabledvalue">
+  <p-card [style]="{height: '400px',width: '650px',padding:'10px'}">
+  <div class="ui-g-12" style="margin-left: 41px;">
     <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
       <h3 class="first">Select Project</h3>
       <p-dropdown [options]="projects" [(ngModel)]="selectedProjects1" (onChange)="callme()" filter="true">
@@ -15,7 +18,7 @@
             </div>
         </ng-template>
       </p-dropdown>
-      <p>Selected Employees: {{ selectedProjects1 }}</p>
+      <!-- <p>Selected Employees: {{ selectedProjects1 }}</p> -->
     </div>
 
     <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
@@ -26,24 +29,29 @@
         [(ngModel)]="selectedEmployees1"
         [panelStyle]="{ minWidth: '30em' }"
         [style]="{width: '192px'}"
-        (onChange)="callme()"
+        (onChange)="callme2()"
       ></p-multiSelect>
-      <p>Selected Employees: {{ selectedEmployees1 }}</p>
+      <!-- <p>Selected Employees: {{ selectedEmployees1 }}</p> -->
     </div>
   </div>
-  <div class="ui-g-12">
+  <div class="ui-g-12" style="margin-left: 41px;">
     <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
       <h3>Start Date</h3>
-      <p-calendar [(ngModel)]="startDate1" [showIcon]="true" (ngModelChange)="callme()"></p-calendar>
+      <p-calendar [(ngModel)]="startDate1" [showIcon]="true" (ngModelChange)="callme3()"></p-calendar>
     </div>
     <div class="ui-g-6 ui-sm-12 ui-lg-6 ui-md-6">
       <h3>End Date</h3>
-      <p-calendar [(ngModel)]="endDate1" [showIcon]="true" (ngModelChange)="callme()"></p-calendar>
+      <p-calendar [(ngModel)]="endDate1" [showIcon]="true" (ngModelChange)="callme4()"></p-calendar>
     </div>
   </div>
   <div class="ui-g-12 ui-sm-12 ui-lg-12 ui-md-12" style="text-align-last: center;">
-    <p-button icon="pi pi-check" iconPos="right" label="Export Excel"></p-button>
+    <p-button icon="pi pi-check" iconPos="right" label="Calculate Efficiency" (click)="finalcall()"></p-button>
   </div>
+  <div class="ui-g-12 ui-sm-12 ui-lg-12 ui-md-12" style="text-align-last: center;font-size: 18px;font-weight: 300;">
+   <div *ngFor="let l of this.eData">
+  <span>{{l.empName}}&nbsp;[{{this.selectedProjects1}}]&nbsp;&nbsp;{{l.efficiency}}%</span>
+   </div>
+</div>
 </p-card>
 </div>
-
+<!--  -->

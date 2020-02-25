@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {AccordionModule} from 'primeng/accordion';     //accordion and accordion tab
+import {AccordionModule} from 'primeng/accordion';
 import {MenuItem} from 'primeng/api';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {FormsModule} from '@angular/forms';
@@ -17,6 +17,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from 'src/environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { HttpClientModule } from '@angular/common/http';
     DropdownModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
-    HttpClientModule
+    HttpClientModule,
+    ProgressSpinnerModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

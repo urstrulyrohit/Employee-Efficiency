@@ -5,12 +5,12 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyAmVpr_rOoypnm5Eqcem5EI31XRjCv1N2c",
-   authDomain: "timesheet-90909.firebaseapp.com",
-   databaseURL: "https://timesheet-90909.firebaseio.com",
-   projectId: "timesheet-90909",
-   storageBucket: "timesheet-90909.appspot.com",
-   messagingSenderId: "668082457313"
+    apiKey: 'AIzaSyAmVpr_rOoypnm5Eqcem5EI31XRjCv1N2c',
+   authDomain: 'timesheet-90909.firebaseapp.com',
+   databaseURL: 'https://timesheet-90909.firebaseio.com',
+   projectId: 'timesheet-90909',
+   storageBucket: 'timesheet-90909.appspot.com',
+   messagingSenderId: '668082457313'
  },
 };
 
